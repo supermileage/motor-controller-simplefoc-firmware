@@ -46,8 +46,8 @@ void setup() {
   sensor.enableInterrupts(doA, doB);
 
   // driver config
-  // power supply voltage [V]
-  driver.voltage_power_supply = 12;
+  driver.voltage_power_supply = 12; // Volts
+  // driver.pwm_frequency = 20000; //based on mc used
   driver.init();
   // link driver
   motor.linkDriver(&driver);
@@ -95,12 +95,6 @@ void setup() {
 
   // set the inital target value
   motor.target = 2; // Volts
-
-  // define the motor id
-  command.add('A', onMotor, "motor");
-
-  // Run user commands to configure and the motor (find the full command list in docs.simplefoc.com)
-  Serial.println(F("Motor commands sketch | Initial motion control > torque/voltage : target 2V."));
   
   _delay(1000);
 }
