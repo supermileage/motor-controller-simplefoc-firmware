@@ -9,12 +9,7 @@
 //  - encA, encB    - encoder A and B pins
 //  - ppr           - impulses per rotation  (cpr=ppr*4)
 //  - index pin     - (optional input)
-Encoder sensor = Encoder(2, 3, 2048); //will we have hardware or software interrupts?
-
-// interrupt routine initialization
-void doA(){sensor.handleA();}
-void doB(){sensor.handleB();}
-//void doIndex(){encoder.handleIndex();} if we have more than 2 hardware interrupts
+Encoder sensor = Encoder(2, 3, 2048); //will be replaced with custom-made encoder class
 
 // BLDC motor & driver instance
 // For Surpass C2216-880KV motor | 14 pole pairs | 0.108 Resistance | 880KV
@@ -42,18 +37,15 @@ void setup() {
   // link the motor to the sensor
   motor.linkSensor(&sensor);
 
-  // enable encoder hardware interrupts
-  sensor.enableInterrupts(doA, doB);
-
   // driver config
-  driver.voltage_power_supply = 12; // Volts
-  // driver.pwm_frequency = 20000; //based on mc used
+  driver.voltage_power_supply = 50.4; // Volts
+  // driver.pwm_frequency = 20000; //based on mcu used
   driver.init();
   // link driver
   motor.linkDriver(&driver);
 
   // aligning voltage
-  motor.voltage_sensor_align = 3;
+  motor.voltage_sensor_align = 3; // Volts
 
   // choose FOC modulation
   motor.foc_modulation = FOCModulationType::SinePWM;
@@ -68,13 +60,8 @@ void setup() {
   motor.controller = MotionControlType::torque;
 
   // default voltage_power_supply
-  motor.voltage_limit = 12;
+  motor.voltage_limit = 50.4; // Volts
 
-  // velocity low pass filtering time constant
-  motor.LPF_velocity.Tf = 0.01;
-
-  // angle loop controller
-  motor.P_angle.P = 20;
   // angle loop velocity limit
   motor.velocity_limit = 50;
 
