@@ -11,7 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Checkout code and SimpleFOC
     - uses: actions/checkout@v3
+      with:
+        submodules: true
 
     - name: Cache pip
       uses: actions/cache@v3
@@ -37,11 +40,6 @@ jobs:
 
     - name: Install PlatformIO Libraries
       run: pio lib install
-
-    - name: Install SimpleFOC Library
-      run: |
-        cd lib
-        git clone https://github.com/simplefoc/Arduino-FOC.git
 
     - name: Run PlatformIO
       run: pio run
