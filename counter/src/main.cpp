@@ -60,8 +60,6 @@ void setup() {
 
 void loop() {
 
-  //float angle_degrees = ((((encoder.getAngle()) * 2) * 180) / 3.146);
-
   // IMPORTANT - call as frequently as possible
   // update the sensor values 
   encoder.update();
