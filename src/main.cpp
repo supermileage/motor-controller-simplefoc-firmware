@@ -20,6 +20,14 @@ BLDCMotor motor = BLDCMotor(14);
 //  - enA, enB, enC - enable pin for each phase (optional)
 BLDCDriver3PWM driver = BLDCDriver3PWM(9, 5, 6, 8);
 
+// InlineCurrentSensor constructor
+//  - shunt_resistor  - shunt resistor value
+//  - gain  - current-sense op-amp gain
+//  - phA   - A phase adc pin
+//  - phB   - B phase adc pin
+//  - phC   - C phase adc pin (optional - _NC if not using)
+InlineCurrentSense current_sense  = InlineCurrentSense(0.01, 50.0, A0, T1, T2);
+
 // commander communication instance
 Commander command = Commander(Serial);
 void onMotor(char* cmd){ command.motor(&motor, cmd); }
@@ -43,6 +51,8 @@ void setup() {
   driver.init();
   // link driver
   motor.linkDriver(&driver);
+  // link current sense and driver
+  current_sense.linkDriver(&driver);
 
   // aligning voltage
   motor.voltage_sensor_align = 3; // Volts
@@ -51,11 +61,10 @@ void setup() {
   motor.foc_modulation = FOCModulationType::SinePWM;
 
   // set torque mode to be used
-  // TorqueControlType::voltage    ( default )
   // TorqueControlType::dc_current NEEDS CURRENT SENSING
   // TorqueControlType::foc_current NEEDS CURRENT SENSING
   // https://docs.simplefoc.com/torque_control#comparison
-  motor.torque_controller = TorqueControlType::voltage;
+  motor.torque_controller = TorqueControlType::dc_current; //TBD
   // set motion control loop to be used
   motor.controller = MotionControlType::torque;
 
@@ -77,6 +86,12 @@ void setup() {
 
   // initialise motor
   motor.init();
+
+// initialise the current sensing
+  current_sense.init();
+  // link the current sense to the motor
+  motor.linkCurrentSense(&current_sense);
+
   // align encoder and start FOC
   motor.initFOC();
 
