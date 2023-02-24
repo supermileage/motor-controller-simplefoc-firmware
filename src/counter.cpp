@@ -18,15 +18,11 @@
 //  - index pin     - (optional input)
 Encoder encoder = Encoder(15, 2, 8192);
 
-#define ESP32_BAUDRATE 115200
-
 // Instantiating Encoder Class
 int cprToPrint;
 float angle_degrees; // defining a variable to measure the relative angle of the motor
 
 void Counter( void * pvParameters ) {
-  // monitoring port
-  Serial.begin(ESP32_BAUDRATE);
 
   // enable/disable quadrature mode
   encoder.quadrature = Quadrature::ON;

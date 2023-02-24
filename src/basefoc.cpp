@@ -28,6 +28,9 @@ void onMotor(char* cmd){ command.motor(&motor, cmd); }
 
 void BaseFOC( void * pvParameters ) {
 
+  Serial.println("Base Ready");
+  motor.useMonitoring(Serial);
+
   // link the motor to the sensor
   motor.linkSensor(&encoder);
 
@@ -59,13 +62,6 @@ void BaseFOC( void * pvParameters ) {
 
   // angle loop velocity limit
   motor.velocity_limit = 50;
-
-  // use monitoring with serial for motor init
-  // monitoring port
-  Serial.begin(115200);
-  motor.useMonitoring(Serial);
-  // used to disable debug outut
-  // SimpleFOCDebug::enable(NULL);
 
   // monitoring values to display
   // motor.monitor_variables = _MON_TARGET | _MON_VEL | _MON_ANGLE; // default _MON_TARGET | _MON_VOLT_Q | _MON_VEL | _MON_ANGLE
