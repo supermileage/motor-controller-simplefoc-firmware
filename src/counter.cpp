@@ -16,7 +16,11 @@
 //  - encA, encB    - encoder A and B pins
 //  - ppr           - impulses per rotation  (cpr=ppr*4)
 //  - index pin     - (optional input)
-Encoder encoder = Encoder(15, 2, 8192);
+Encoder encoder = Encoder(15, 4, 8192);
+
+// interrupt routine initialization
+void doA(){encoder.handleA();}
+void doB(){encoder.handleB();}
 
 // Instantiating Encoder Class
 int cprToPrint;
@@ -32,6 +36,8 @@ void Counter( void * pvParameters ) {
   
   // initialize encoder hardware
   encoder.init();
+
+  encoder.enableInterrupts(doA, doB);
 
   Serial.println("Encoder ready");
   _delay(1000);
@@ -49,8 +55,8 @@ void Counter( void * pvParameters ) {
     cprToPrint = encoder.getFullRotations();
     cprToPrint = cprToPrint % 8192;
 
-    Serial.print(angle_degrees);
-    Serial.print("\t");
-    Serial.println(cprToPrint);
+    // Serial.print(angle_degrees);
+    // Serial.print("\t");
+    // Serial.println(cprToPrint);
   }
 }

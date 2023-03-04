@@ -12,7 +12,7 @@ BLDCMotor motor = BLDCMotor(14);
 //  BLDCDriver3PWM( int phA, int phB, int phC, int enA, int enB, int enC )
 //  - phA, phB, phC - A,B,C phase pwm pins
 //  - enA, enB, enC - enable pin for each phase (optional)
-BLDCDriver3PWM driver = BLDCDriver3PWM(9, 5, 6, 8);
+BLDCDriver3PWM driver = BLDCDriver3PWM(12, 13, 14);
 
 // InlineCurrentSensor constructor
 //  - shunt_resistor  - shunt resistor value
@@ -49,13 +49,8 @@ void BaseFOC( void * pvParameters ) {
   // choose FOC modulation
   motor.foc_modulation = FOCModulationType::SinePWM;
 
-  // set torque mode to be used
-  // TorqueControlType::dc_current NEEDS CURRENT SENSING
-  // TorqueControlType::foc_current NEEDS CURRENT SENSING
-  // https://docs.simplefoc.com/torque_control#comparison
-  motor.torque_controller = TorqueControlType::dc_current; //TBD
   // set motion control loop to be used
-  motor.controller = MotionControlType::torque;
+  motor.controller = MotionControlType::velocity;
 
   // default voltage_power_supply
   motor.voltage_limit = 50.4; // Volts
@@ -78,14 +73,17 @@ void BaseFOC( void * pvParameters ) {
   motor.initFOC();
 
   // set the inital target value
-  motor.target = 2; // Volts
-  
+  //motor.target = 2; // Volts
+
+  // velocity set point variable
+  float target_velocity = 2; // 2Rad/s ~ 20rpm
+
   _delay(1000);
 
   for(;;) { // equivalent to loop()
 
     // can display current motor position or phase voltage Ua
-    Serial.println(motor.shaft_angle);
+    // Serial.println(motor.shaft_angle);
 
     // Function running the low level torque control loop
     // it calculates the gets motor angle and sets the appropriate voltages 
@@ -93,16 +91,18 @@ void BaseFOC( void * pvParameters ) {
     // - the faster you can run it the better Arduino UNO ~1ms, Bluepill ~ 100us
     motor.loopFOC();
 
-    // iterative function setting the outter loop target
+    // iterative function setting the outer loop target
     // velocity, position or voltage
     // if target not set in parameter below, use motor.target variable
-    motor.move();
+    motor.move(target_velocity);
 
     // motor monitoring
     motor.monitor();
     
     // user communication
     command.run();
+
+    _delay(1000);
   }
 }
 
