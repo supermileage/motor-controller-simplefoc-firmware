@@ -5,9 +5,15 @@
 #include "../include/main.h"
 extern Encoder encoder;
 
-// BLDC motor & driver instance
+//  BLDCMotor(int pp, (optional R, KV))
+//  - pp  - pole pair number
+//  - R   - phase resistance value - optional
+//  - KV  - motor KV rating [rpm/V] - optional
 // For Surpass C2216-880KV motor | 14 pole pairs | 0.108 Resistance | 880KV
 BLDCMotor motor = BLDCMotor(14);
+
+// For Koford 129H169T motor | 10 pole pairs | TBD Resistance | TBD
+// BLDCMotor motor = BLDCMotor(10);
 
 //  BLDCDriver3PWM( int phA, int phB, int phC, int enA, int enB, int enC )
 //  - phA, phB, phC - A,B,C phase pwm pins
@@ -34,9 +40,11 @@ void BaseFOC( void * pvParameters ) {
   // link the motor to the sensor
   motor.linkSensor(&encoder);
 
-  // driver config
-  driver.voltage_power_supply = 50.4; // Volts
-  // driver.pwm_frequency = 20000; //based on mcu used
+  // power supply voltage [V]
+  driver.voltage_power_supply = 48;
+  // Max DC voltage allowed - default voltage_power_supply
+  driver.voltage_limit = 50.4;
+  driver.pwm_frequency = 30000; //based on mcu used
   driver.init();
   // link driver
   motor.linkDriver(&driver);
@@ -52,8 +60,11 @@ void BaseFOC( void * pvParameters ) {
   // set motion control loop to be used
   motor.controller = MotionControlType::velocity;
 
-  // default voltage_power_supply
-  motor.voltage_limit = 50.4; // Volts
+  // setting the limits
+  // either voltage
+  // motor.voltage_limit = 50.4; // Volts - default driver.voltage_limit
+  // of current 
+  motor.current_limit = 40; // Amps - default 0.2Amps
 
   // angle loop velocity limit
   motor.velocity_limit = 50;
@@ -71,9 +82,6 @@ void BaseFOC( void * pvParameters ) {
 
   // align encoder and start FOC
   motor.initFOC();
-
-  // set the inital target value
-  //motor.target = 2; // Volts
 
   // velocity set point variable
   float target_velocity = 2; // 2Rad/s ~ 20rpm
