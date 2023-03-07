@@ -40,7 +40,7 @@ void BaseFOC( void * pvParameters ) {
   // link the motor to the sensor
   motor.linkSensor(&encoder);
 
-  // power supply voltage [V]
+  // power supply voltage [V] - Change this locally for testing
   driver.voltage_power_supply = 48;
   // Max DC voltage allowed - default voltage_power_supply
   driver.voltage_limit = 50.4;
@@ -60,10 +60,10 @@ void BaseFOC( void * pvParameters ) {
   // set motion control loop to be used
   motor.controller = MotionControlType::velocity;
 
-  // setting the limits
+  // setting the limits - Change this locally for testing
   // either voltage
   // motor.voltage_limit = 50.4; // Volts - default driver.voltage_limit
-  // of current 
+  // or current 
   motor.current_limit = 40; // Amps - default 0.2Amps
 
   // angle loop velocity limit
@@ -109,8 +109,6 @@ void BaseFOC( void * pvParameters ) {
     
     // user communication
     command.run();
-
-    _delay(1000);
   }
 }
 
