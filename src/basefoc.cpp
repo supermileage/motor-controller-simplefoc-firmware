@@ -1,5 +1,5 @@
 /**
- * Source code for motor controller functionality
+ * Source code for Urban motor controller functionality
  */
 
 #include "../include/main.h"

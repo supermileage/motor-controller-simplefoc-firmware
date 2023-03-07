@@ -1,13 +1,6 @@
 /**
-  Optical Encoder Counter for Motor Controller
-
-  This code aims to use the AMT103 Optical Encoder which should be placed
-  on the brushless motor shaft. The AMT103 would then be connected to the ESP32 MicroController
-  (the SAMD21 could also be used for testing) through an Analog Level Shifter [according to Talisha´s diagram].
-  ask Talisha about Analog Level Shifter details
-
-  Raul Vazquez Guerero
-**/
+ * Source code for Urban motor controller encoder functionality
+ */
 
 #include "../include/main.h"
 
