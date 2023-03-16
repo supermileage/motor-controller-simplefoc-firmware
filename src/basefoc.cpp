@@ -108,12 +108,12 @@ void BaseFOC( void * pvParameters ) {
 
   command.add('T', doTarget, "target velocity");
 
-  _delay(1000);
+  throttle.begin();
 
   for(;;) { // equivalent to loop()
 
     throttle.loop();
-    //  throttle.get(); // Use this to get a throttle value in [0,255]. Scale it as needed. 
+    //  throttle.get(); // TODO: Use this to get a throttle value in [0,255]. Scale it as needed. 
 
     // can display current motor position or phase voltage Ua
     // Serial.println(motor.shaft_angle);
@@ -135,6 +135,8 @@ void BaseFOC( void * pvParameters ) {
     // user communication
     command.run();
 
+    // Necessary to not upset watchdog timer
+    yield();
   }
 }
 

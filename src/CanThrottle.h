@@ -1,15 +1,15 @@
 #pragma once
 
-#define CAN_DEBUG               1
+#define CAN_DEBUG               0       // Enable to print debug messages to Serial Monitor
 
 #define PIN_CAN_CS              5
 #define CAN_SPEED               CAN_500KBPS
 #define CAN_CONTROLLER_SPEED    MCP_8MHz
 #define CAN_FRAME               0x0
-#define CAN_STALE_TIME          1000
+#define CAN_STALE_TIME          1000    // How long after the last message to kill throttle
 #define CAN_HEARTBEAT_TIME      250
 
-#define THROTTLE_RAMP_INTERVAL  4
+#define THROTTLE_RAMP_INTERVAL  4       // Allow throttle to increase every interval ms 
 
 #include "mcp2515_can.h"
 
@@ -29,7 +29,12 @@ class CanThrottle {
         /**
          * CONSTRUCTOR
          * */
-        CanThrottle();
+        CanThrottle(){}
+
+        /**
+         * @brief Initializes CAN Bus
+         * */
+        void begin();
 
         /**
          * @brief Run every loop to monitor CAN bus and update throttle value

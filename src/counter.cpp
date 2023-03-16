@@ -51,5 +51,8 @@ void Counter( void * pvParameters ) {
     // Serial.print(angle_degrees);
     // Serial.print("\t");
     // Serial.println(cprToPrint);
+
+    // Necessary to not upset watchdog timer
+    yield();
   }
 }

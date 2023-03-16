@@ -1,15 +1,10 @@
 #include "CanThrottle.h"
 #include "can_common.h"
 
-CanThrottle::CanThrottle()
-{
-
-    // Start CAN
-    SPI.begin();
+void CanThrottle::begin() {
     uint8_t error = can.begin(CAN_SPEED, CAN_CONTROLLER_SPEED);
     if (CAN_DEBUG)
         Serial.println("CAN INIT: " + getCanError(error));
-
 }
 
 void CanThrottle::loop()
@@ -79,6 +74,8 @@ void CanThrottle::loop()
         if (CAN_DEBUG)
             Serial.println("HEARTBEAT SEND: " + getCanError(error));
     }
+
+    yield();
 }
 
 uint8_t CanThrottle::get()
