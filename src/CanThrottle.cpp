@@ -1,4 +1,4 @@
-#include "can.h"
+#include "CanThrottle.h"
 #include "can_common.h"
 
 CanThrottle::CanThrottle()

@@ -3,7 +3,11 @@
  */
 
 #include "../include/main.h"
+#include "CanThrottle.h"
+
 extern Encoder encoder;
+
+CanThrottle throttle;
 
 //  BLDCMotor(int pp, (optional R, KV))
 //  - pp  - pole pair number
@@ -108,6 +112,9 @@ void BaseFOC( void * pvParameters ) {
 
   for(;;) { // equivalent to loop()
 
+    throttle.loop();
+    //  throttle.get(); // Use this to get a throttle value in [0,255]. Scale it as needed. 
+
     // can display current motor position or phase voltage Ua
     // Serial.println(motor.shaft_angle);
 
@@ -127,6 +134,7 @@ void BaseFOC( void * pvParameters ) {
     
     // user communication
     command.run();
+
   }
 }
 
