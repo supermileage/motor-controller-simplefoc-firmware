@@ -12,15 +12,15 @@ extern Encoder encoder;
 // For Surpass C2216-880KV motor | 7 pole pairs | 0.108 Resistance | 880KV
 BLDCMotor motor = BLDCMotor(7);
 
-// For Koford 129H169T motor | 10 pole pairs | TBD Resistance | TBD
-// BLDCMotor motor = BLDCMotor(10);
+// For Koford 129H169T motor | 5 pole pairs | TBD Resistance | TBD
+// BLDCMotor motor = BLDCMotor(5);
 
 //  BLDCDriver6PWM( int phA_h, int phA_l, int phB_h, int phB_l, int phC_h, int phC_l, int en)
 //  - phA_h, phA_l - A phase pwm pin high/low pair 
 //  - phB_h, phB_l - B phase pwm pin high/low pair
 //  - phB_h, phC_l - C phase pwm pin high/low pair
 //  - enable pin    - (optional input)
-BLDCDriver6PWM driver = BLDCDriver6PWM(13,12, 27,26, 33,32);
+BLDCDriver3PWM driver = BLDCDriver3PWM(32,26,25);
 
 // InlineCurrentSensor constructor
 //  - shunt_resistor  - shunt resistor value
@@ -36,12 +36,17 @@ float target_velocity = 0; // 2Rad/s ~ 20rpm
 // commander communication instance
 Commander command = Commander(Serial);
 void doTarget(char* cmd) {command.scalar(&target_velocity,cmd); }
-void onMotor(char* cmd){ command.motor(&motor, cmd); }
+void doMotor(char* cmd){ command.motor(&motor, cmd); }
 
 void BaseFOC( void * pvParameters ) {
 
   Serial.println("Base Ready");
   motor.useMonitoring(Serial);
+
+  // VerboseMode::nothing        - display nothing - good for monitoring
+  // VerboseMode::on_request     - display only on user request
+  // VerboseMode::user_friendly  - display textual messages to the user (default)
+  command.verbose = VerboseMode::user_friendly;
 
   // link the motor to the sensor
   motor.linkSensor(&encoder);
@@ -72,24 +77,24 @@ void BaseFOC( void * pvParameters ) {
   motor.PID_velocity.D = 0.001;
 
   // velocity low pass filtering time constant
-  motor.LPF_velocity.Tf = 0.01;
+  motor.LPF_velocity.Tf = 0.1;
 
   // angle loop controller
   motor.P_angle.P = 20;
 
   // setting the limits - Change this locally for testing
   // either voltage
-  motor.voltage_limit = 1; // Volts - default driver.voltage_limit
+  motor.voltage_limit = 6; // Volts - default driver.voltage_limit
   // or current 
   // motor.current_limit = 22; // Amps - default 0.2Amps
 
   // angle loop velocity limit
-  motor.velocity_limit = 50;
+  motor.velocity_limit = 2;
 
   // monitoring values to display
-  // motor.monitor_variables = _MON_TARGET | _MON_VEL | _MON_ANGLE; // default _MON_TARGET | _MON_VOLT_Q | _MON_VEL | _MON_ANGLE
+  // motor.monitor_variables; // default _MON_TARGET | _MON_VOLT_Q | _MON_VEL | _MON_ANGLE
   
-  command.add('M', onMotor, "motor");
+  command.add('M', doMotor, "motor");
 
   // initialise motor
   motor.init();
