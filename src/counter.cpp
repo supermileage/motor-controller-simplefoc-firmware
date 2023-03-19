@@ -9,7 +9,7 @@
 //  - encA, encB    - encoder A and B pins
 //  - ppr           - impulses per rotation  (cpr=ppr*4)
 //  - index pin     - (optional input)
-Encoder encoder = Encoder(15, 4, 8192);
+Encoder encoder = Encoder(15, 4, 256);
 
 // interrupt routine initialization
 void doA(){encoder.handleA();}
@@ -45,8 +45,8 @@ void Counter( void * pvParameters ) {
     angle_degrees = ((((angle_degrees) * 4) * 180) / PI);
     angle_degrees = (int)angle_degrees % 360;
     
-    cprToPrint = encoder.getFullRotations();
-    cprToPrint = cprToPrint % 8192;
+    // cprToPrint = encoder.getFullRotations();
+    // cprToPrint = cprToPrint % 8192;
 
     // Serial.print(angle_degrees);
     // Serial.print("\t");
