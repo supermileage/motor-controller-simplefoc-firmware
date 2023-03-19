@@ -2,7 +2,7 @@
  * Source code for Urban motor controller functionality
  */
 
-#include "../include/main.h"
+#include "main.h"
 #include "CanThrottle.h"
 
 extern Encoder encoder;
@@ -36,6 +36,8 @@ BLDCDriver3PWM driver = BLDCDriver3PWM(32,26,25);
 
 // velocity set point variable
 float target_velocity = 0; // 2Rad/s ~ 20rpm
+float current_temp = 0; // in DegC
+float current_vref = 0; // in V
 
 // commander communication instance
 Commander command = Commander(Serial);
@@ -44,7 +46,7 @@ void doMotor(char* cmd){ command.motor(&motor, cmd); }
 
 void BaseFOC( void * pvParameters ) {
 
-  Serial.println("Base Ready");
+  DEBUG_SERIAL_LN("Base Ready");
   motor.useMonitoring(Serial);
 
   // VerboseMode::nothing        - display nothing - good for monitoring
@@ -117,11 +119,24 @@ void BaseFOC( void * pvParameters ) {
 
   for(;;) { // equivalent to loop()
 
+    if(digitalRead(OVC) == HIGH) {
+      DEBUG_SERIAL("Current Exceeded Maximum");
+      break;
+    }
+
+    driver.voltage_power_supply = analogRead(VREF);
+
+    current_temp = analogRead(TEMP);
+    if(1); // calculations to break if temp too high
+
+    current_vref = analogRead(CSET);
+    if(1); // calculations to cross-check output voltage with selected current
+
     throttle.loop();
     //  throttle.get(); // TODO: Use this to get a throttle value in [0,255]. Scale it as needed. 
 
     // can display current motor position or phase voltage Ua
-    // Serial.println(motor.shaft_angle);
+    // DEBUG_SERIAL_LN(motor.shaft_angle);
 
     // Function running the low level torque control loop
     // it calculates the gets motor angle and sets the appropriate voltages 

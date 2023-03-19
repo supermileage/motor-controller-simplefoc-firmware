@@ -1,4 +1,4 @@
-#include "../include/main.h"
+#include "main.h"
 
 void BaseFOC( void * pvParameters );
 void Counter( void * pvParameters );
@@ -10,7 +10,7 @@ void setup() {
 
     // monitoring port
     Serial.begin(115200);
-    Serial.println("Starting Setup");
+    DEBUG_SERIAL_LN("Starting Setup");
 
     xTaskCreatePinnedToCore(
                     BaseFOC,

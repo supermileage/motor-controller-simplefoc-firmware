@@ -2,7 +2,7 @@
  * Source code for Urban motor controller encoder functionality
  */
 
-#include "../include/main.h"
+#include "main.h"
 
 // According to the AMT103 datasheet, the encoder is preset to PPR=2048 (meaning that CPR=8192)
 //  Encoder(int encA, int encB , int cpr, int index)
@@ -48,9 +48,9 @@ void Counter( void * pvParameters ) {
     // cprToPrint = encoder.getFullRotations();
     // cprToPrint = cprToPrint % 8192;
 
-    // Serial.print(angle_degrees);
-    // Serial.print("\t");
-    // Serial.println(cprToPrint);
+    // DEBUG_SERIAL(String(angle_degrees));
+    // DEBUG_SERIAL("\t");
+    // DEBUG_SERIAL(String(cprToPrint) + "\n");
 
     // Necessary to not upset watchdog timer
     yield();
