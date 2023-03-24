@@ -19,6 +19,9 @@ BLDCMotor motor = BLDCMotor(7);
 // For Koford 129H169T motor | 5 pole pairs | TBD Resistance | TBD
 // BLDCMotor motor = BLDCMotor(5);
 
+// For SHINANO LA034-040NN07A | 3 pole pairs
+// BLDCMotor motor = BLDCMotor(3);
+
 //  BLDCDriver6PWM( int phA_h, int phA_l, int phB_h, int phB_l, int phC_h, int phC_l, int en)
 //  - phA_h, phA_l - A phase pwm pin high/low pair 
 //  - phB_h, phB_l - B phase pwm pin high/low pair

@@ -8,6 +8,8 @@ TaskHandle_t counter;
 
 void setup() {
 
+    disableCore0WDT();
+    
     // monitoring port
     Serial.begin(115200);
     Serial.println("Starting Setup");
