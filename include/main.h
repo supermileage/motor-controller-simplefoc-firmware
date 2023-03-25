@@ -21,7 +21,15 @@
 // PCB Pinout Macros
 #define CSET 20
 #define OVC 23
-#define TEMP 18
+#define TEMP_CONV 18
 #define VREF 14
+
+// Voltage-Resistance Thermistor Macros
+// https://www.allaboutcircuits.com/industry-articles/how-to-obtain-the-temperature-value-from-a-thermistor-measurement/
+// https://www.murata.com/en-eu/api/pdfdownloadapi?cate=&partno=NCP18XH103F03RB
+
+#define A_CONST 0.000929028203
+#define B_CONST 0.000248284038
+#define C_CONST 0.000000191337313
 
 #endif

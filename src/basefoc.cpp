@@ -36,8 +36,10 @@ BLDCDriver3PWM driver = BLDCDriver3PWM(32,26,25);
 
 // velocity set point variable
 float target_velocity = 0; // 2Rad/s ~ 20rpm
-float current_temp = 0; // in DegC
-float current_vref = 0; // in V
+float curr_temp; // in DegC
+float curr_temp_volt;
+float curr_temp_res;
+float curr_vref = 0; // in V
 
 // commander communication instance
 Commander command = Commander(Serial);
@@ -126,10 +128,19 @@ void BaseFOC( void * pvParameters ) {
 
     driver.voltage_power_supply = analogRead(VREF);
 
-    current_temp = analogRead(TEMP);
-    if(1); // calculations to break if temp too high
+    curr_temp_volt = analogRead(TEMP_CONV);
+    curr_temp_res = -(10000*curr_temp_volt)/(curr_temp_volt - 3.3); // Resistor Divider
+    curr_temp = 1/(A_CONST + B_CONST*log(curr_temp_res)+C_CONST*cbrt(log(curr_temp_res))) - 273.15; // Res -> Temp
+    DEBUG_SERIAL(curr_temp);
+    if(curr_temp > 100) {
+      DEBUG_SERIAL("Temperatures Rising High");
+    }
+    if(curr_temp > 125) {
+      DEBUG_SERIAL("Temperature Exceeded Maximum");
+      break;
+    }
 
-    current_vref = analogRead(CSET);
+    curr_vref = analogRead(CSET);
     if(1); // calculations to cross-check output voltage with selected current
 
     throttle.loop();
