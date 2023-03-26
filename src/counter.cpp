@@ -9,7 +9,7 @@
 //  - encA, encB    - encoder A and B pins
 //  - ppr           - impulses per rotation  (cpr=ppr*4)
 //  - index pin     - (optional input)
-Encoder encoder = Encoder(15, 4, 256);
+Encoder encoder = Encoder(ENC_A, ENC_B, PPR);
 
 // interrupt routine initialization
 void doA(){encoder.handleA();}
