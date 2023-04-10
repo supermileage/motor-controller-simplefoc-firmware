@@ -1,10 +1,11 @@
 #include "CanThrottle.h"
 #include "can_common.h"
+#include "main.h"
 
 void CanThrottle::begin() {
     uint8_t error = can.begin(CAN_SPEED, CAN_CONTROLLER_SPEED);
     if (CAN_DEBUG)
-        Serial.println("CAN INIT: " + getCanError(error));
+        DEBUG_SERIAL_LN("CAN INIT: " + getCanError(error));
 }
 
 void CanThrottle::loop()
@@ -27,17 +28,17 @@ void CanThrottle::loop()
 
         if (CAN_DEBUG)
         {
-            Serial.println("-----------------------------");
-            Serial.print("CAN MESSAGE RECEIVED - ID: 0x");
+            DEBUG_SERIAL_LN("-----------------------------");
+            DEBUG_SERIAL("CAN MESSAGE RECEIVED - ID: 0x");
             Serial.println(message.id, HEX);
 
             for (int i = 0; i < message.dataLength; i++)
             {
-                Serial.print("0x");
-                Serial.print(message.data[i], HEX);
-                Serial.print("\t");
+                DEBUG_SERIAL("0x");
+                DEBUG_SERIAL_B(message.data[i], HEX);
+                DEBUG_SERIAL("\t");
             }
-            Serial.println();
+            DEBUG_SERIAL_LN();
         }
     }
 
@@ -72,7 +73,7 @@ void CanThrottle::loop()
         msg.data[0] = 0x1;
         uint8_t error = can.MCP_CAN::sendMsgBuf(msg.id, CAN_FRAME, msg.dataLength, msg.data);
         if (CAN_DEBUG)
-            Serial.println("HEARTBEAT SEND: " + getCanError(error));
+            DEBUG_SERIAL_LN("HEARTBEAT SEND: " + getCanError(error));
     }
 
     yield();
@@ -91,7 +92,7 @@ void CanThrottle::checkStale() {
     {
         throttleVal = 0;
         if (CAN_DEBUG)
-            Serial.println("ERROR: NO DATA - Output set to 0v");
+            DEBUG_SERIAL_LN("ERROR: NO DATA - Output set to 0v");
     }
 }
 
