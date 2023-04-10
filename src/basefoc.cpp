@@ -58,7 +58,7 @@ void BaseFOC( void * pvParameters ) {
   motor.linkSensor(&encoder);
 
   // power supply voltage [V] - Change this locally for testing
-  driver.voltage_power_supply = 24;
+  driver.voltage_power_supply = 48;
   // Max DC voltage allowed - default voltage_power_supply
   driver.voltage_limit = 50.4;
   driver.pwm_frequency = 30000; //based on mcu used
@@ -121,7 +121,7 @@ void BaseFOC( void * pvParameters ) {
 
     if(digitalRead(OVC) == HIGH) {
       DEBUG_SERIAL("Current Exceeded Maximum");
-      // break;
+      driver.disable();
     }
 
     analogWrite(CSET, max_current*0.01);
@@ -135,7 +135,7 @@ void BaseFOC( void * pvParameters ) {
     }
     if(curr_temp > 125.0) {
       DEBUG_SERIAL("Temperature Exceeded Maximum");
-      break;
+      driver.disable();
     }
 
     // curr_vref = analogRead(VREF);

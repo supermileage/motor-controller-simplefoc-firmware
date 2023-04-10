@@ -22,7 +22,7 @@
 // For Surpass C2216-880KV motor | 7 pole pairs | 0.108 Resistance | 880KV
 // For Koford 129H169T motor | 5 pole pairs | TBD Resistance | TBD
 // For SHINANO LA034-040NN07A | 3 pole pairs
-#define POLE_PAIRS 3
+#define POLE_PAIRS 5
 
 // Driver Phases
 #define PHASE_A 32
